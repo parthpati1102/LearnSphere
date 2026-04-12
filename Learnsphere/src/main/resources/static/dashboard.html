@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnSphere – Learn Anything</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+          --brand: #a435f0;
+          --brand-dark: #7a1cc0;
+          --brand-light: #f0e6ff;
+          --gold: #f69c08;
+          --dark: #1c1d1f;
+          --mid: #3d3d3d;
+          --muted: #6a6f73;
+          --border: #d1d7dc;
+          --surface: #f7f9fa;
+          --white: #ffffff;
+          --success: #1ea97c;
+          --danger: #d32f2f;
+          --warn: #f0a500;
+          --radius: 6px;
+          --shadow: 0 2px 12px rgba(0,0,0,0.08);
+          --shadow-lg: 0 6px 32px rgba(0,0,0,0.14);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+          font-family: 'DM Sans', sans-serif;
+          color: var(--dark);
+          background: var(--white);
+          font-size: 15px;
+          line-height: 1.5;
+        }
+
+        /* ──────────── NAV ──────────── */
+        .nav {
+          position: sticky; top: 0; z-index: 100;
+          background: var(--dark);
+          display: flex; align-items: center;
+          gap: 12px; padding: 0 20px;
+          height: 60px; box-shadow: var(--shadow);
+        }
+        .nav-brand {
+          font-family: 'Playfair Display', serif;
+          font-size: 22px; color: var(--white);
+          letter-spacing: -0.5px; white-space: nowrap;
+          margin-right: 12px;
+        }
+        .nav-brand span { color: var(--brand); }
+        .nav-cat-btn {
+          background: none; border: 1px solid rgba(255,255,255,0.3);
+          color: var(--white); padding: 6px 14px;
+          border-radius: var(--radius); font-size: 13px;
+          cursor: pointer; white-space: nowrap;
+          transition: background 0.2s;
+        }
+        .nav-cat-btn:hover { background: rgba(255,255,255,0.1); }
+        .nav-search {
+          flex: 1; position: relative; max-width: 560px;
+        }
+        .nav-search input {
+          width: 100%; padding: 9px 16px 9px 40px;
+          border: 2px solid transparent; border-radius: 40px;
+          background: rgba(255,255,255,0.12);
+          color: var(--white); font-size: 14px;
+          outline: none; transition: all 0.2s;
+        }
+        .nav-search input::placeholder { color: rgba(255,255,255,0.5); }
+        .nav-search input:focus {
+          background: rgba(255,255,255,0.18);
+          border-color: var(--brand);
+        }
+        .nav-search-icon {
+          position: absolute; left: 12px; top: 50%;
+          transform: translateY(-50%);
+          color: rgba(255,255,255,0.5); font-size: 15px;
+        }
+        .nav-right { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+        .nav-user {
+          display: flex; align-items: center; gap: 8px;
+          cursor: pointer;
+        }
+        .nav-avatar {
+          width: 36px; height: 36px; border-radius: 50%;
+          background: var(--brand); display: flex;
+          align-items: center; justify-content: center;
+          font-size: 14px; font-weight: 600; color: #fff;
+          border: 2px solid rgba(255,255,255,0.3);
+        }
+        .nav-email {
+          color: rgba(255,255,255,0.8); font-size: 12px; max-width: 130px;
+          overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        .btn-logout {
+          background: none; border: 1px solid rgba(255,255,255,0.3);
+          color: rgba(255,255,255,0.7); padding: 6px 12px;
+          border-radius: var(--radius); font-size: 12px;
+          cursor: pointer; transition: all 0.2s;
+        }
+        .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
+
+        /* ──────────── HERO ──────────── */
+        .hero {
+          background: linear-gradient(135deg, #1c1d1f 0%, #3b1a5a 100%);
+          padding: 56px 0;
+          position: relative; overflow: hidden;
+        }
+        .hero::after {
+          content: '';
+          position: absolute; inset: 0;
+          background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23a435f0' fill-opacity='0.06'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+          pointer-events: none;
+        }
+        .hero-inner {
+          max-width: 700px; padding: 0 32px;
+          position: relative; z-index: 1;
+        }
+        .hero h1 {
+          font-family: 'Playfair Display', serif;
+          font-size: clamp(28px, 4vw, 44px);
+          color: var(--white); line-height: 1.2; margin-bottom: 14px;
+        }
+        .hero h1 em { color: var(--brand); font-style: normal; }
+        .hero p { color: rgba(255,255,255,0.7); font-size: 16px; margin-bottom: 24px; }
+        .hero-cta {
+          display: flex; gap: 10px; flex-wrap: wrap;
+        }
+        .btn-primary {
+          background: var(--brand); color: #fff;
+          padding: 11px 24px; border-radius: var(--radius);
+          font-size: 14px; font-weight: 600; border: none;
+          cursor: pointer; transition: background 0.2s;
+        }
+        .btn-primary:hover { background: var(--brand-dark); }
+        .btn-outline {
+          background: transparent; color: var(--white);
+          padding: 11px 24px; border-radius: var(--radius);
+          font-size: 14px; font-weight: 600;
+          border: 2px solid rgba(255,255,255,0.4);
+          cursor: pointer; transition: all 0.2s;
+        }
+        .btn-outline:hover { border-color: var(--white); }
+
+        /* ──────────── INSTRUCTOR STUDIO ──────────── */
+        .instructor-banner {
+          background: var(--brand-light);
+          border-bottom: 2px solid var(--brand);
+          padding: 16px 0;
+        }
+        .studio-inner {
+          max-width: 1200px; margin: 0 auto;
+          padding: 0 24px;
+        }
+        .studio-header {
+          display: flex; align-items: center; gap: 10px;
+          margin-bottom: 14px;
+        }
+        .studio-badge {
+          background: var(--brand); color: #fff;
+          font-size: 11px; font-weight: 600;
+          padding: 3px 10px; border-radius: 20px;
+          letter-spacing: 0.8px; text-transform: uppercase;
+        }
+        .studio-header h3 {
+          font-size: 16px; font-weight: 600; color: var(--brand-dark);
+        }
+        .studio-form {
+          display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end;
+        }
+        .studio-form .field { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 180px; }
+        .studio-form label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; }
+        .studio-form input {
+          padding: 9px 12px; border: 1.5px solid var(--border);
+          border-radius: var(--radius); font-size: 14px;
+          background: var(--white); outline: none;
+          transition: border-color 0.2s;
+        }
+        .studio-form input:focus { border-color: var(--brand); }
+        .btn-create {
+          background: var(--brand-dark); color: #fff;
+          padding: 10px 22px; border-radius: var(--radius);
+          font-size: 14px; font-weight: 600; border: none;
+          cursor: pointer; white-space: nowrap;
+          transition: background 0.2s;
+        }
+        .btn-create:hover { background: var(--brand); }
+
+        /* ──────────── MAIN CONTENT ──────────── */
+        .main { max-width: 1200px; margin: 0 auto; padding: 36px 24px 60px; }
+
+        .section-header {
+          display: flex; align-items: baseline;
+          justify-content: space-between; margin-bottom: 20px;
+        }
+        .section-title {
+          font-size: 21px; font-weight: 600; color: var(--dark);
+        }
+        .section-count {
+          font-size: 13px; color: var(--muted); font-weight: 400;
+        }
+
+        /* ──────────── COURSE GRID ──────────── */
+        .course-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          gap: 20px;
+        }
+
+        .course-card {
+          background: var(--white);
+          border: 1px solid var(--border);
+          border-radius: 10px;
+          overflow: hidden;
+          transition: box-shadow 0.25s, transform 0.2s;
+          display: flex; flex-direction: column;
+        }
+        .course-card:hover {
+          box-shadow: var(--shadow-lg);
+          transform: translateY(-3px);
+        }
+        .course-thumb {
+          height: 130px;
+          background: linear-gradient(135deg, #1c1d1f, #3b1a5a);
+          display: flex; align-items: center; justify-content: center;
+          font-size: 44px; position: relative; overflow: hidden;
+        }
+        .course-thumb::before {
+          content: attr(data-letter);
+          font-family: 'Playfair Display', serif;
+          font-size: 80px; font-weight: 700;
+          color: rgba(164,53,240,0.2);
+          position: absolute; bottom: -8px; right: 12px;
+          line-height: 1;
+        }
+        .course-thumb-icon { position: relative; z-index: 1; font-size: 36px; }
+        .course-body { padding: 14px 16px; flex: 1; display: flex; flex-direction: column; }
+        .course-tag {
+          display: inline-flex; align-items: center;
+          background: var(--brand-light); color: var(--brand-dark);
+          font-size: 10px; font-weight: 600;
+          padding: 2px 8px; border-radius: 20px;
+          text-transform: uppercase; letter-spacing: 0.6px;
+          margin-bottom: 8px; align-self: flex-start;
+        }
+        .course-title {
+          font-size: 15px; font-weight: 600; color: var(--dark);
+          line-height: 1.4; margin-bottom: 6px;
+        }
+        .course-desc {
+          font-size: 12px; color: var(--muted);
+          line-height: 1.5; margin-bottom: 10px; flex: 1;
+          display: -webkit-box; -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .course-meta {
+          display: flex; align-items: center; gap: 8px;
+          margin-bottom: 10px;
+        }
+        .course-modules-count {
+          font-size: 11px; color: var(--muted);
+          display: flex; align-items: center; gap: 4px;
+        }
+        .course-actions {
+          display: flex; gap: 6px; flex-wrap: wrap;
+          border-top: 1px solid var(--border); padding-top: 12px;
+        }
+        .btn-sm {
+          padding: 5px 12px; border-radius: var(--radius);
+          font-size: 12px; font-weight: 600; cursor: pointer;
+          border: 1.5px solid; transition: all 0.2s;
+        }
+        .btn-enroll {
+          background: var(--brand); color: #fff; border-color: var(--brand);
+          flex: 1;
+        }
+        .btn-enroll:hover { background: var(--brand-dark); border-color: var(--brand-dark); }
+        .btn-edit { background: #fff; color: #0066cc; border-color: #0066cc; }
+        .btn-edit:hover { background: #e8f0ff; }
+        .btn-delete { background: #fff; color: var(--danger); border-color: var(--danger); }
+        .btn-delete:hover { background: #ffeaea; }
+        .btn-add-module { background: #fff; color: var(--success); border-color: var(--success); flex: 1; }
+        .btn-add-module:hover { background: #e8f9f4; }
+
+        /* ──────────── EXPANDED COURSE ──────────── */
+        .course-expand {
+          display: none;
+          background: var(--surface);
+          border-top: 1px solid var(--border);
+          padding: 16px;
+        }
+        .course-expand.open { display: block; }
+
+        .module-row {
+          background: var(--white);
+          border: 1px solid var(--border);
+          border-radius: 8px; margin-bottom: 10px;
+          overflow: hidden;
+        }
+        .module-header {
+          display: flex; align-items: center;
+          justify-content: space-between;
+          padding: 12px 16px;
+          cursor: pointer;
+          transition: background 0.15s;
+        }
+        .module-header:hover { background: var(--surface); }
+        .module-title-row {
+          display: flex; align-items: center; gap: 10px;
+        }
+        .module-icon {
+          width: 28px; height: 28px; border-radius: 6px;
+          background: var(--brand-light); display: flex;
+          align-items: center; justify-content: center;
+          font-size: 13px;
+        }
+        .module-name { font-size: 14px; font-weight: 600; color: var(--dark); }
+        .module-lesson-count { font-size: 11px; color: var(--muted); }
+        .module-controls { display: flex; gap: 6px; }
+        .btn-xs {
+          padding: 3px 9px; border-radius: 4px;
+          font-size: 11px; font-weight: 600; cursor: pointer;
+          border: 1.5px solid; transition: all 0.15s;
+          background: var(--white);
+        }
+        .btn-xs-add { color: var(--success); border-color: var(--success); }
+        .btn-xs-add:hover { background: #e8f9f4; }
+        .btn-xs-edit { color: #0066cc; border-color: #0066cc; }
+        .btn-xs-edit:hover { background: #e8f0ff; }
+        .btn-xs-del { color: var(--danger); border-color: var(--danger); }
+        .btn-xs-del:hover { background: #ffeaea; }
+
+        .lessons-list { padding: 0 16px 12px; }
+        .lesson-item {
+          display: flex; align-items: center;
+          justify-content: space-between;
+          padding: 9px 12px;
+          border-radius: 6px;
+          border: 1px solid var(--border);
+          background: var(--white);
+          margin-bottom: 6px;
+          transition: border-color 0.15s;
+        }
+        .lesson-item:hover { border-color: var(--brand); }
+        .lesson-left { display: flex; align-items: flex-start; gap: 8px; }
+        .lesson-dot {
+          width: 22px; height: 22px; border-radius: 50%;
+          border: 2px solid var(--brand); flex-shrink: 0;
+          display: flex; align-items: center; justify-content: center;
+          font-size: 10px; color: var(--brand); font-weight: 700;
+          margin-top: 1px;
+        }
+        .lesson-info {}
+        .lesson-title { font-size: 13px; font-weight: 600; color: var(--dark); }
+        .lesson-content {
+          font-size: 11px; color: var(--muted); margin-top: 2px;
+          max-width: 320px; white-space: nowrap;
+          overflow: hidden; text-overflow: ellipsis;
+        }
+        .lesson-controls { display: flex; gap: 4px; flex-shrink: 0; }
+
+        /* ──────────── EMPTY STATE ──────────── */
+        .empty-state {
+          grid-column: 1/-1;
+          text-align: center; padding: 60px 20px;
+        }
+        .empty-icon { font-size: 56px; margin-bottom: 16px; opacity: 0.4; }
+        .empty-state h3 { font-size: 20px; color: var(--mid); margin-bottom: 8px; }
+        .empty-state p { color: var(--muted); font-size: 14px; }
+
+        /* ──────────── MODAL ──────────── */
+        .modal-overlay {
+          position: fixed; inset: 0; z-index: 1000;
+          background: rgba(0,0,0,0.55);
+          display: flex; align-items: center; justify-content: center;
+          opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .modal-overlay.open { opacity: 1; pointer-events: all; }
+        .modal-box {
+          background: var(--white); border-radius: 12px;
+          width: 100%; max-width: 460px; margin: 16px;
+          box-shadow: var(--shadow-lg);
+          transform: translateY(20px); transition: transform 0.25s;
+        }
+        .modal-overlay.open .modal-box { transform: translateY(0); }
+        .modal-head {
+          display: flex; align-items: center; justify-content: space-between;
+          padding: 18px 22px; border-bottom: 1px solid var(--border);
+        }
+        .modal-head h4 { font-size: 17px; font-weight: 600; }
+        .modal-close {
+          background: none; border: none; font-size: 22px;
+          color: var(--muted); cursor: pointer; line-height: 1;
+          padding: 0 4px;
+        }
+        .modal-close:hover { color: var(--dark); }
+        .modal-body { padding: 22px; display: flex; flex-direction: column; gap: 14px; }
+        .form-field { display: flex; flex-direction: column; gap: 5px; }
+        .form-label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-input {
+          padding: 10px 13px; border: 1.5px solid var(--border);
+          border-radius: var(--radius); font-size: 14px;
+          font-family: inherit; outline: none; transition: border-color 0.2s;
+        }
+        .form-input:focus { border-color: var(--brand); }
+        .modal-foot { padding: 16px 22px; border-top: 1px solid var(--border); }
+        .btn-submit {
+          width: 100%; padding: 11px;
+          background: var(--brand); color: #fff;
+          border: none; border-radius: var(--radius);
+          font-size: 15px; font-weight: 600; cursor: pointer;
+          transition: background 0.2s;
+        }
+        .btn-submit:hover { background: var(--brand-dark); }
+
+        /* ──────────── TOAST ──────────── */
+        .toast {
+          position: fixed; bottom: 24px; right: 24px;
+          background: var(--dark); color: #fff;
+          padding: 12px 20px; border-radius: 8px;
+          font-size: 13px; font-weight: 500;
+          box-shadow: var(--shadow-lg); z-index: 2000;
+          transform: translateY(20px); opacity: 0;
+          transition: all 0.3s; pointer-events: none;
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast.success { border-left: 4px solid var(--success); }
+        .toast.error { border-left: 4px solid var(--danger); }
+
+        /* ──────────── STATS BAR ──────────── */
+        .stats-bar {
+          display: flex; gap: 0;
+          border: 1px solid var(--border);
+          border-radius: 10px; overflow: hidden;
+          margin-bottom: 28px; background: var(--white);
+        }
+        .stat-item {
+          flex: 1; padding: 16px 20px;
+          border-right: 1px solid var(--border);
+          display: flex; flex-direction: column; gap: 2px;
+        }
+        .stat-item:last-child { border-right: none; }
+        .stat-val { font-size: 24px; font-weight: 700; color: var(--brand); }
+        .stat-lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; }
+
+        /* ──────────── CHEVRON ──────────── */
+        .chevron {
+          font-size: 12px; color: var(--muted);
+          transition: transform 0.2s; display: inline-block;
+        }
+        .chevron.open { transform: rotate(180deg); }
+
+        /* ──────────── RESPONSIVE ──────────── */
+        @media (max-width: 700px) {
+          .nav-cat-btn { display: none; }
+          .nav-email { display: none; }
+          .stats-bar { flex-direction: column; }
+          .stat-item { border-right: none; border-bottom: 1px solid var(--border); }
+          .stat-item:last-child { border-bottom: none; }
+          .hero { padding: 36px 0; }
+          .hero-inner { padding: 0 20px; }
+          .course-grid { grid-template-columns: 1fr; }
+        }
+
+        .tag-pill {
+          display: inline-flex; align-items: center; gap: 5px;
+          background: var(--surface); border: 1px solid var(--border);
+          color: var(--muted); font-size: 11px; padding: 3px 10px;
+          border-radius: 20px; margin: 2px;
+          cursor: pointer; transition: all 0.15s;
+        }
+        .tag-pill:hover, .tag-pill.active {
+          background: var(--brand-light); border-color: var(--brand);
+          color: var(--brand-dark);
+        }
+        .filter-row {
+          display: flex; flex-wrap: wrap; gap: 4px;
+          margin-bottom: 20px; align-items: center;
+        }
+        .filter-label { font-size: 12px; color: var(--muted); margin-right: 6px; font-weight: 600; }
+
+        .progress-bar {
+          height: 4px; background: var(--border);
+          border-radius: 2px; overflow: hidden; margin-top: 8px;
+        }
+        .progress-fill {
+          height: 100%; background: var(--brand); border-radius: 2px;
+          transition: width 0.3s;
+        }
+
+        .instructor-tag {
+          font-size: 11px; color: var(--muted); margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+    <div class="nav-brand">Learn<span>Sphere</span></div>
+    <button class="nav-cat-btn">Categories ▾</button>
+    <div class="nav-search">
+        <span class="nav-search-icon">🔍</span>
+        <input type="text" placeholder="Search for anything..." id="searchInput" oninput="filterCourses()">
+    </div>
+    <div class="nav-right">
+        <div class="nav-user">
+            <div class="nav-avatar" id="navAvatar">?</div>
+            <div class="nav-email" id="navEmail">user@email.com</div>
+        </div>
+        <button class="btn-logout" onclick="logout()">Logout</button>
+    </div>
+</nav>
+
+<!-- INSTRUCTOR STUDIO -->
+<div id="instructorBanner" class="instructor-banner" style="display:none;">
+    <div class="studio-inner">
+        <div class="studio-header">
+            <span class="studio-badge">Instructor Studio</span>
+            <h3>Create &amp; manage your courses</h3>
+        </div>
+        <div class="studio-form">
+            <div class="field">
+                <label>Course Title</label>
+                <input type="text" id="newCourseTitle" placeholder="e.g. Complete Web Development Bootcamp">
+            </div>
+            <div class="field">
+                <label>Description</label>
+                <input type="text" id="newCourseDesc" placeholder="What will students learn?">
+            </div>
+            <button class="btn-create" onclick="createNewCourse()">+ Create Course</button>
+        </div>
+    </div>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="heroSection">
+    <div class="hero-inner">
+        <h1>Learn without <em>limits.</em><br>Grow without bounds.</h1>
+        <p>Thousands of courses. Expert instructors. Learn at your own pace, anywhere, anytime.</p>
+        <div class="hero-cta">
+            <button class="btn-primary" onclick="document.getElementById('mainContent').scrollIntoView({behavior:'smooth'})">Browse Courses</button>
+            <button class="btn-outline" onclick="showToast('Feature coming soon!', 'success')">View My Learning</button>
+        </div>
+    </div>
+</section>
+
+<!-- MAIN -->
+<main class="main" id="mainContent">
+
+    <!-- Stats -->
+    <div class="stats-bar" id="statsBar">
+        <div class="stat-item">
+            <span class="stat-val" id="statCourses">0</span>
+            <span class="stat-lbl">Courses</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-val" id="statModules">0</span>
+            <span class="stat-lbl">Modules</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-val" id="statLessons">0</span>
+            <span class="stat-lbl">Lessons</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-val" id="statStudents">—</span>
+            <span class="stat-lbl">Students</span>
+        </div>
+    </div>
+
+    <!-- Filter Row -->
+    <div class="filter-row" id="filterRow">
+        <span class="filter-label">Filter:</span>
+        <span class="tag-pill active" onclick="filterTag(this,'all')">All</span>
+        <span class="tag-pill" onclick="filterTag(this,'new')">Newest</span>
+        <span class="tag-pill" onclick="filterTag(this,'popular')">Most Popular</span>
+        <span class="tag-pill" onclick="filterTag(this,'beginner')">Beginner</span>
+    </div>
+
+    <!-- Section Header -->
+    <div class="section-header">
+        <div>
+            <div class="section-title">Explore Curriculum</div>
+        </div>
+        <span class="section-count" id="courseCountLabel"></span>
+    </div>
+
+    <!-- Course Grid -->
+    <div class="course-grid" id="courseGrid"></div>
+
+</main>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+    <div class="modal-box">
+        <div class="modal-head">
+            <h4 id="modalTitle">Add Content</h4>
+            <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="targetId">
+            <input type="hidden" id="targetType">
+            <div class="form-field">
+                <label class="form-label">Title</label>
+                <input class="form-input" type="text" id="contentTitle" placeholder="Enter title...">
+            </div>
+            <div class="form-field" id="extraContentArea" style="display:none;">
+                <label class="form-label">Description / Content</label>
+                <textarea class="form-input" id="contentText" rows="3" placeholder="Enter description or lesson content..."></textarea>
+            </div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn-submit" onclick="handleFormSubmit()">Save Changes</button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+    const token = localStorage.getItem('jwtToken') || 'demo-token';
+    const role = (localStorage.getItem('userRole') || 'INSTRUCTOR').toUpperCase();
+    const email = localStorage.getItem('userEmail') || 'instructor@learnsphere.com';
+
+    if (!token && !localStorage.getItem('demo')) window.location.href = '/login.html';
+
+    const isInstructor = ['INSTRUCTOR','ROLE_INSTRUCTOR','ADMIN'].includes(role);
+
+    // Set nav
+    document.getElementById('navEmail').textContent = email;
+    document.getElementById('navAvatar').textContent = email.charAt(0).toUpperCase();
+    if (isInstructor) document.getElementById('instructorBanner').style.display = 'block';
+
+    const EMOJIS = ['📘','🎯','🚀','🧠','💡','🎨','🔬','🌐','⚡','🏆'];
+    const TAGS = ['Development','Design','Business','Marketing','Data Science','Personal Dev'];
+    let allCourses = [];
+
+    // ── DEMO DATA ──
+    function seedDemoData() {
+      return [
+        {
+          id: 1, title: 'Complete Web Development Bootcamp',
+          description: 'Master HTML, CSS, JavaScript, Node.js and more. Build 25+ real-world projects.',
+          modules: [
+            { id: 101, title: 'HTML & CSS Foundations', subModules: [
+              { id: 1001, title: 'Introduction to HTML', content: 'Tags, attributes, semantic structure' },
+              { id: 1002, title: 'CSS Box Model', content: 'Margins, padding, borders explained' },
+              { id: 1003, title: 'Flexbox & Grid', content: 'Modern layout techniques' }
+            ]},
+            { id: 102, title: 'JavaScript Essentials', subModules: [
+              { id: 1004, title: 'Variables & Data Types', content: 'var, let, const – when to use what' },
+              { id: 1005, title: 'DOM Manipulation', content: 'Selecting and modifying page elements' }
+            ]}
+          ]
+        },
+        {
+          id: 2, title: 'UI/UX Design Mastery',
+          description: 'Learn design thinking, Figma, prototyping and user research methodologies.',
+          modules: [
+            { id: 201, title: 'Design Principles', subModules: [
+              { id: 2001, title: 'Color Theory', content: 'Hue, saturation, and complementary palettes' },
+              { id: 2002, title: 'Typography Basics', content: 'Font pairing and readability' }
+            ]}
+          ]
+        },
+        {
+          id: 3, title: 'Python for Data Science',
+          description: 'From zero to data scientist. NumPy, Pandas, Matplotlib, scikit-learn.',
+          modules: [
+            { id: 301, title: 'Python Fundamentals', subModules: [
+              { id: 3001, title: 'Setup & Installation', content: 'Anaconda, Jupyter Notebooks, VS Code' }
+            ]},
+            { id: 302, title: 'Data Analysis', subModules: [
+              { id: 3002, title: 'Pandas DataFrames', content: 'Loading, cleaning, and transforming data' },
+              { id: 3003, title: 'Visualizations', content: 'Matplotlib & Seaborn charts' }
+            ]}
+          ]
+        }
+      ];
+    }
+
+    async function loadDashboard() {
+      try {
+        const res = await fetch('/api/courses', { headers: { 'Authorization': `Bearer ${token}` } });
+        if (!res.ok) throw new Error('API unavailable');
+        allCourses = await res.json();
+      } catch {
+        allCourses = seedDemoData();
+      }
+      renderAll(allCourses);
+      updateStats(allCourses);
+    }
+
+    function updateStats(courses) {
+      const modules = courses.reduce((a,c) => a + (c.modules?.length || 0), 0);
+      const lessons = courses.reduce((a,c) => a + (c.modules || []).reduce((b,m) => b + (m.subModules?.length || 0), 0), 0);
+      document.getElementById('statCourses').textContent = courses.length;
+      document.getElementById('statModules').textContent = modules;
+      document.getElementById('statLessons').textContent = lessons;
+      document.getElementById('statStudents').textContent = isInstructor ? Math.floor(courses.length * 47) : '—';
+      document.getElementById('courseCountLabel').textContent = `${courses.length} course${courses.length !== 1 ? 's' : ''} available`;
+    }
+
+    function renderAll(courses) {
+      const grid = document.getElementById('courseGrid');
+      if (!courses.length) {
+        grid.innerHTML = `<div class="empty-state">
+          <div class="empty-icon">📭</div>
+          <h3>No courses found</h3>
+          <p>${isInstructor ? 'Create your first course using the Instructor Studio above.' : 'Check back later for new courses.'}</p>
+        </div>`;
+        return;
+      }
+      grid.innerHTML = courses.map((c, i) => renderCourseCard(c, i)).join('');
+    }
+
+    function renderCourseCard(c, i) {
+      const emoji = EMOJIS[i % EMOJIS.length];
+      const tag = TAGS[i % TAGS.length];
+      const letter = c.title.charAt(0).toUpperCase();
+      const modCount = c.modules?.length || 0;
+      const lessonCount = (c.modules || []).reduce((a,m) => a + (m.subModules?.length || 0), 0);
+      const progress = Math.floor(Math.random() * 70 + 10);
+
+      const instructorBtns = isInstructor ? `
+        <button class="btn-sm btn-add-module" onclick="openModal('module',${c.id},'Add Module to: ${esc(c.title)}'); event.stopPropagation()">+ Module</button>
+        <button class="btn-sm btn-edit" onclick="openModal('edit-course',${c.id},'Edit Course','${esc(c.title)}','${esc(c.description||'')}'); event.stopPropagation()">Edit</button>
+        <button class="btn-sm btn-delete" onclick="deleteItem('course',${c.id}); event.stopPropagation()">Delete</button>
+      ` : `<button class="btn-sm btn-enroll" onclick="showToast('Enrolled in ${esc(c.title)}!','success')">Enroll Now</button>`;
+
+      const moduleHTML = renderModulesPanel(c);
+
+      return `
+      <div class="course-card" id="card-${c.id}">
+        <div class="course-thumb" data-letter="${letter}">
+          <span class="course-thumb-icon">${emoji}</span>
+        </div>
+        <div class="course-body">
+          <span class="course-tag">${tag}</span>
+          <div class="course-title">${c.title}</div>
+          <div class="course-desc">${c.description || 'No description provided.'}</div>
+          <div class="course-meta">
+            <span class="course-modules-count">📂 ${modCount} module${modCount !== 1 ? 's' : ''}</span>
+            <span class="course-modules-count">📄 ${lessonCount} lesson${lessonCount !== 1 ? 's' : ''}</span>
+          </div>
+          ${!isInstructor ? `<div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div><div class="instructor-tag">${progress}% complete</div>` : ''}
+          <div class="course-actions">${instructorBtns}</div>
+          <button style="width:100%;margin-top:8px;padding:7px;background:none;border:1px dashed var(--border);border-radius:var(--radius);font-size:12px;color:var(--muted);cursor:pointer;transition:all 0.2s;" onclick="toggleExpand(${c.id})" id="expandBtn-${c.id}">
+            ▾ View Curriculum
+          </button>
+        </div>
+        <div class="course-expand" id="expand-${c.id}">${moduleHTML}</div>
+      </div>`;
+    }
+
+    function renderModulesPanel(c) {
+      if (!c.modules?.length) return '<div style="font-size:13px;color:var(--muted);padding:8px 0;">No modules yet.</div>';
+      return c.modules.map((m, mi) => {
+        const subHTML = (m.subModules || []).map((s, si) => `
+          <div class="lesson-item">
+            <div class="lesson-left">
+              <div class="lesson-dot">${si + 1}</div>
+              <div class="lesson-info">
+                <div class="lesson-title">${s.title}</div>
+                ${s.content ? `<div class="lesson-content">${s.content}</div>` : ''}
+              </div>
+            </div>
+            ${isInstructor ? `
+            <div class="lesson-controls">
+              <button class="btn-xs btn-xs-edit" onclick="openModal('edit-submodule',${s.id},'Edit Lesson','${esc(s.title)}','${esc(s.content||'')}')">Edit</button>
+              <button class="btn-xs btn-xs-del" onclick="deleteItem('submodule',${s.id})">Del</button>
+            </div>` : ''}
+          </div>
+        `).join('');
+
+        return `
+        <div class="module-row">
+          <div class="module-header" onclick="toggleModule(${m.id})">
+            <div class="module-title-row">
+              <div class="module-icon">📂</div>
+              <div>
+                <div class="module-name">${m.title}</div>
+                <div class="module-lesson-count">${m.subModules?.length || 0} lesson${(m.subModules?.length || 0) !== 1 ? 's' : ''}</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              ${isInstructor ? `
+              <div class="module-controls" onclick="event.stopPropagation()">
+                <button class="btn-xs btn-xs-add" onclick="openModal('submodule',${m.id},'Add Lesson')">+ Lesson</button>
+                <button class="btn-xs btn-xs-edit" onclick="openModal('edit-module',${m.id},'Edit Module','${esc(m.title)}')">Edit</button>
+                <button class="btn-xs btn-xs-del" onclick="deleteItem('module',${m.id})">Del</button>
+              </div>` : ''}
+              <span class="chevron" id="chevron-${m.id}">▾</span>
+            </div>
+          </div>
+          <div class="lessons-list" id="module-${m.id}" style="display:none;">
+            ${subHTML || '<div style="font-size:12px;color:var(--muted);padding:8px 0 4px;">No lessons yet.</div>'}
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function toggleExpand(id) {
+      const el = document.getElementById(`expand-${id}`);
+      const btn = document.getElementById(`expandBtn-${id}`);
+      const open = el.classList.toggle('open');
+      btn.textContent = open ? '▴ Hide Curriculum' : '▾ View Curriculum';
+      btn.style.borderStyle = open ? 'solid' : 'dashed';
+      btn.style.color = open ? 'var(--brand)' : 'var(--muted)';
+      btn.style.borderColor = open ? 'var(--brand)' : 'var(--border)';
+    }
+
+    function toggleModule(id) {
+      const el = document.getElementById(`module-${id}`);
+      const ch = document.getElementById(`chevron-${id}`);
+      const open = el.style.display === 'none';
+      el.style.display = open ? 'block' : 'none';
+      ch.classList.toggle('open', open);
+    }
+
+    function esc(str) { return (str || '').replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
+
+    // ── MODAL ──
+    function openModal(type, id, title, val1='', val2='') {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('targetType').value = type;
+      document.getElementById('targetId').value = id;
+      document.getElementById('contentTitle').value = val1;
+      document.getElementById('contentText').value = val2;
+      const extra = type.includes('submodule') || type.includes('course');
+      document.getElementById('extraContentArea').style.display = extra ? 'flex' : 'none';
+      document.getElementById('modalOverlay').classList.add('open');
+      setTimeout(() => document.getElementById('contentTitle').focus(), 100);
+    }
+
+    function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+    function closeModalOutside(e) { if (e.target === document.getElementById('modalOverlay')) closeModal(); }
+
+    // ── FORM SUBMIT ──
+    async function handleFormSubmit() {
+      const type = document.getElementById('targetType').value;
+      const id = document.getElementById('targetId').value;
+      const title = document.getElementById('contentTitle').value.trim();
+      const content = document.getElementById('contentText').value.trim();
+      if (!title) { showToast('Please enter a title', 'error'); return; }
+
+      let url, method = 'POST', body = { title };
+      if (type.startsWith('edit-')) {
+        method = 'PUT';
+        const actual = type.replace('edit-', '');
+        if (actual === 'course') { url = `/api/courses/${id}`; body.description = content; }
+        else if (actual === 'module') { url = `/api/courses/modules/${id}`; }
+        else { url = `/api/courses/submodules/${id}`; body.content = content; }
+      } else {
+        if (type === 'module') url = `/api/courses/${id}/modules`;
+        else { url = `/api/courses/modules/${id}/submodules`; body.content = content; }
+      }
+
+      try {
+        const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify(body) });
+        if (!res.ok) throw new Error();
+        showToast('Saved successfully!', 'success');
+        closeModal(); loadDashboard();
+      } catch {
+        // Demo mode: update locally
+        applyLocalChange(type, parseInt(id), title, content);
+        showToast('Saved (demo mode)', 'success');
+        closeModal(); renderAll(allCourses); updateStats(allCourses);
+      }
+    }
+
+    function applyLocalChange(type, id, title, content) {
+      if (type === 'module') {
+        const c = allCourses.find(c => c.id === id);
+        if (c) { c.modules = c.modules || []; c.modules.push({ id: Date.now(), title, subModules: [] }); }
+      } else if (type === 'submodule') {
+        allCourses.forEach(c => (c.modules || []).forEach(m => { if (m.id === id) { m.subModules = m.subModules || []; m.subModules.push({ id: Date.now(), title, content }); }}));
+      } else if (type === 'edit-course') {
+        const c = allCourses.find(c => c.id === id);
+        if (c) { c.title = title; c.description = content; }
+      } else if (type === 'edit-module') {
+        allCourses.forEach(c => (c.modules || []).forEach(m => { if (m.id === id) m.title = title; }));
+      } else if (type === 'edit-submodule') {
+        allCourses.forEach(c => (c.modules || []).forEach(m => (m.subModules || []).forEach(s => { if (s.id === id) { s.title = title; s.content = content; }})));
+      }
+    }
+
+    // ── DELETE ──
+    async function deleteItem(type, id) {
+      if (!confirm(`Delete this ${type}?`)) return;
+      const urls = { course: `/api/courses/${id}`, module: `/api/courses/modules/${id}`, submodule: `/api/courses/submodules/${id}` };
+      try {
+        const res = await fetch(urls[type], { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+        if (!res.ok) throw new Error();
+      } catch {}
+      // Local removal
+      if (type === 'course') allCourses = allCourses.filter(c => c.id !== id);
+      else if (type === 'module') allCourses.forEach(c => { c.modules = (c.modules || []).filter(m => m.id !== id); });
+      else allCourses.forEach(c => (c.modules || []).forEach(m => { m.subModules = (m.subModules || []).filter(s => s.id !== id); }));
+      showToast('Deleted successfully', 'success');
+      renderAll(allCourses); updateStats(allCourses);
+    }
+
+    // ── CREATE COURSE ──
+    async function createNewCourse() {
+      const title = document.getElementById('newCourseTitle').value.trim();
+      const description = document.getElementById('newCourseDesc').value.trim();
+      if (!title) { showToast('Please enter a course title', 'error'); return; }
+      try {
+        const res = await fetch('/api/courses', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ title, description }) });
+        if (!res.ok) throw new Error();
+        loadDashboard();
+      } catch {
+        allCourses.push({ id: Date.now(), title, description, modules: [] });
+        renderAll(allCourses); updateStats(allCourses);
+      }
+      document.getElementById('newCourseTitle').value = '';
+      document.getElementById('newCourseDesc').value = '';
+      showToast(`Course "${title}" created!`, 'success');
+    }
+
+    // ── SEARCH ──
+    function filterCourses() {
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      const filtered = allCourses.filter(c =>
+        c.title.toLowerCase().includes(q) || (c.description || '').toLowerCase().includes(q)
+      );
+      renderAll(filtered);
+      updateStats(filtered);
+    }
+
+    // ── FILTER TAGS ──
+    function filterTag(el, type) {
+      document.querySelectorAll('.tag-pill').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+      // Simple demo filtering
+      if (type === 'all') { renderAll(allCourses); updateStats(allCourses); return; }
+      const sorted = [...allCourses].sort((a,b) => {
+        if (type === 'popular') return (b.modules?.length || 0) - (a.modules?.length || 0);
+        if (type === 'new') return b.id - a.id;
+        return 0;
+      });
+      renderAll(sorted); updateStats(sorted);
+    }
+
+    // ── TOAST ──
+    function showToast(msg, type='success') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = `toast ${type} show`;
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    function logout() { localStorage.clear(); window.location.href = '/login.html'; }
+
+    // Keyboard close
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    loadDashboard();
+</script>
+</body>
+</html>
