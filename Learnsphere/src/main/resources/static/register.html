@@ -1,51 +1,811 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>LearnSphere - Register</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnSphere – Create Account</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+          --brand: #a435f0;
+          --brand2: #6c17c9;
+          --teal: #00c9a7;
+          --gold: #f5a623;
+          --coral: #ff6b6b;
+          --dark: #0e0e14;
+          --dark2: #16161f;
+          --dark3: #1e1e2e;
+          --muted: #8b8ba7;
+          --border: rgba(255,255,255,0.08);
+          --white: #ffffff;
+          --text-soft: rgba(255,255,255,0.7);
+          --text-muted: rgba(255,255,255,0.4);
+          --danger: #ff6b6b;
+          --success: #00c9a7;
+          --radius: 12px;
+          --radius-pill: 999px;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { height: 100%; }
+        body {
+          font-family: 'Outfit', sans-serif;
+          background: var(--dark);
+          color: var(--white);
+          min-height: 100vh;
+          display: flex;
+          overflow-x: hidden;
+          line-height: 1.6;
+        }
+
+        /* ── CURSOR GLOW ── */
+        .cursor-glow {
+          position: fixed; width: 500px; height: 500px; border-radius: 50%;
+          background: radial-gradient(circle, rgba(164,53,240,0.1) 0%, transparent 70%);
+          pointer-events: none; z-index: 0;
+          transform: translate(-50%, -50%);
+          transition: left 0.5s ease, top 0.5s ease;
+        }
+
+        /* ── LEFT PANEL ── */
+        .left-panel {
+          flex: 1; position: relative;
+          display: flex; flex-direction: column;
+          justify-content: center; align-items: flex-start;
+          padding: 60px 64px;
+          background: var(--dark); overflow: hidden; min-height: 100vh;
+        }
+        .lp-bg {
+          position: absolute; inset: 0; z-index: 0;
+          background:
+            radial-gradient(ellipse 70% 60% at 40% 30%, rgba(0,201,167,0.15) 0%, transparent 60%),
+            radial-gradient(ellipse 50% 50% at 70% 80%, rgba(164,53,240,0.12) 0%, transparent 50%);
+        }
+        .lp-grid {
+          position: absolute; inset: 0; z-index: 0;
+          background-image:
+            linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+          background-size: 52px 52px;
+          mask-image: radial-gradient(ellipse 100% 100% at 30% 50%, black 20%, transparent 100%);
+        }
+        .lp-orb {
+          position: absolute; border-radius: 50%;
+          filter: blur(90px); pointer-events: none;
+        }
+        .lp-orb-1 {
+          width: 380px; height: 380px;
+          background: rgba(0,201,167,0.15);
+          top: -60px; right: -60px;
+          animation: floatOrb1 9s ease-in-out infinite;
+        }
+        .lp-orb-2 {
+          width: 260px; height: 260px;
+          background: rgba(164,53,240,0.14);
+          bottom: 60px; left: -40px;
+          animation: floatOrb2 11s ease-in-out infinite;
+        }
+        @keyframes floatOrb1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-20px,25px)} }
+        @keyframes floatOrb2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(15px,-20px)} }
+
+        .lp-content { position: relative; z-index: 1; max-width: 480px; }
+        .lp-brand {
+          font-family: 'Syne', sans-serif;
+          font-size: 28px; font-weight: 800;
+          text-decoration: none; color: var(--white);
+          display: inline-block; margin-bottom: 56px;
+        }
+        .lp-brand span { color: var(--brand); }
+        .lp-eyebrow {
+          font-size: 11px; font-weight: 600; letter-spacing: 2px;
+          text-transform: uppercase; color: var(--teal); margin-bottom: 12px;
+        }
+        .lp-headline {
+          font-family: 'Syne', sans-serif;
+          font-size: clamp(30px, 3.2vw, 44px);
+          font-weight: 800; line-height: 1.12;
+          letter-spacing: -1.5px; margin-bottom: 18px;
+        }
+        .lp-headline em {
+          font-style: normal;
+          background: linear-gradient(135deg, var(--teal) 0%, #43e97b 50%, var(--brand) 100%);
+          -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        .lp-sub {
+          font-size: 15px; color: var(--text-soft);
+          line-height: 1.7; margin-bottom: 44px; max-width: 400px;
+        }
+
+        /* Role preview cards */
+        .role-preview { display: flex; gap: 14px; margin-bottom: 48px; }
+        .role-prev-card {
+          flex: 1; background: rgba(255,255,255,0.04);
+          border: 1px solid var(--border);
+          border-radius: var(--radius); padding: 18px 16px;
+          cursor: default;
+          transition: border-color 0.3s, background 0.3s;
+        }
+        .role-prev-card.student { border-color: rgba(0,201,167,0.25); }
+        .role-prev-card.instructor { border-color: rgba(164,53,240,0.25); }
+        .rpc-icon { font-size: 28px; margin-bottom: 8px; }
+        .rpc-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+        .rpc-desc { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+        .rpc-badge {
+          display: inline-block; font-size: 9px; font-weight: 600;
+          letter-spacing: 0.5px; text-transform: uppercase;
+          padding: 2px 8px; border-radius: 20px; margin-top: 8px;
+        }
+        .badge-teal { background: rgba(0,201,167,0.15); color: #4dffd9; }
+        .badge-purple { background: rgba(164,53,240,0.15); color: #d088ff; }
+
+        .trust-row {
+          display: flex; align-items: center; gap: 14px;
+          padding-top: 32px; border-top: 1px solid var(--border);
+        }
+        .trust-avatars { display: flex; }
+        .trust-avatar {
+          width: 32px; height: 32px; border-radius: 50%;
+          border: 2px solid var(--dark);
+          display: flex; align-items: center; justify-content: center;
+          font-size: 12px; font-weight: 700; margin-left: -8px;
+        }
+        .trust-avatar:first-child { margin-left: 0; }
+        .av1 { background: linear-gradient(135deg,#f093fb,#f5576c); }
+        .av2 { background: linear-gradient(135deg,#4facfe,#00f2fe); }
+        .av3 { background: linear-gradient(135deg,#43e97b,#38f9d7); }
+        .av4 { background: linear-gradient(135deg,#f6d365,#fda085); }
+        .trust-info { font-size: 12px; color: var(--text-muted); }
+        .trust-info strong { color: var(--text-soft); font-size: 13px; display: block; }
+        .trust-stars { color: var(--gold); font-size: 11px; }
+
+        /* ── RIGHT PANEL ── */
+        .right-panel {
+          width: 500px; flex-shrink: 0;
+          display: flex; align-items: center; justify-content: center;
+          padding: 48px 40px;
+          background: var(--dark2);
+          border-left: 1px solid var(--border);
+          position: relative; z-index: 1;
+          min-height: 100vh;
+        }
+        .form-card {
+          width: 100%; max-width: 400px;
+          animation: slideIn 0.5s ease both;
+        }
+        @keyframes slideIn {
+          from { opacity: 0; transform: translateX(20px); }
+          to   { opacity: 1; transform: translateX(0); }
+        }
+
+        .form-top { margin-bottom: 28px; }
+        .form-eyebrow {
+          font-size: 11px; font-weight: 600; letter-spacing: 2px;
+          text-transform: uppercase; color: var(--teal); margin-bottom: 10px;
+        }
+        .form-title {
+          font-family: 'Syne', sans-serif;
+          font-size: 26px; font-weight: 800;
+          letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 8px;
+        }
+        .form-subtitle { font-size: 14px; color: var(--text-muted); }
+
+        /* Progress bar */
+        .progress-wrap { margin-bottom: 28px; }
+        .progress-label {
+          display: flex; justify-content: space-between;
+          font-size: 11px; color: var(--text-muted); margin-bottom: 8px;
+        }
+        .progress-label span { font-weight: 600; color: var(--text-soft); }
+        .progress-track {
+          height: 4px; background: rgba(255,255,255,0.07);
+          border-radius: 2px; overflow: hidden;
+        }
+        .progress-fill {
+          height: 100%; border-radius: 2px;
+          background: linear-gradient(90deg, var(--teal), var(--brand));
+          transition: width 0.4s ease;
+          width: 0%;
+        }
+
+        /* Social login */
+        .social-row { display: flex; gap: 10px; margin-bottom: 22px; }
+        .social-btn {
+          flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+          background: rgba(255,255,255,0.05);
+          border: 1px solid var(--border);
+          border-radius: var(--radius); padding: 11px;
+          color: var(--text-soft); font-size: 13px; font-weight: 500;
+          cursor: pointer; font-family: 'Outfit', sans-serif;
+          transition: background 0.2s, border-color 0.2s, color 0.2s;
+        }
+        .social-btn:hover { background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.2); color: var(--white); }
+
+        .divider {
+          display: flex; align-items: center; gap: 12px; margin-bottom: 22px;
+        }
+        .divider-line { flex: 1; height: 1px; background: var(--border); }
+        .divider-text { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+
+        /* Form fields */
+        .form-group { margin-bottom: 16px; }
+        .form-label {
+          display: block; font-size: 12px; font-weight: 600;
+          letter-spacing: 0.5px; color: var(--text-soft);
+          text-transform: uppercase; margin-bottom: 7px;
+        }
+        .input-wrap { position: relative; }
+        .input-icon {
+          position: absolute; left: 14px; top: 50%;
+          transform: translateY(-50%); font-size: 15px;
+          pointer-events: none; color: var(--muted); transition: color 0.2s;
+        }
+        .input-wrap:focus-within .input-icon { color: var(--brand); }
+        .form-input {
+          width: 100%; padding: 13px 14px 13px 42px;
+          background: rgba(255,255,255,0.05);
+          border: 1.5px solid rgba(255,255,255,0.1);
+          border-radius: var(--radius); color: var(--white);
+          font-size: 15px; font-family: 'Outfit', sans-serif;
+          outline: none; transition: border-color 0.2s, background 0.2s;
+        }
+        .form-input::placeholder { color: var(--text-muted); }
+        .form-input:focus { border-color: var(--brand); background: rgba(164,53,240,0.06); }
+        .form-input.error { border-color: var(--danger); }
+        .form-input.valid { border-color: var(--success); }
+
+        .input-check {
+          position: absolute; right: 14px; top: 50%;
+          transform: translateY(-50%); font-size: 14px;
+          display: none; pointer-events: none;
+        }
+        .input-check.show { display: block; }
+
+        .password-toggle {
+          position: absolute; right: 36px; top: 50%;
+          transform: translateY(-50%);
+          background: none; border: none; color: var(--muted);
+          cursor: pointer; font-size: 16px; padding: 0;
+          transition: color 0.2s; line-height: 1;
+        }
+        .password-toggle:hover { color: var(--white); }
+        .password-toggle-solo {
+          right: 14px;
+        }
+
+        .field-error {
+          font-size: 11px; color: var(--danger);
+          margin-top: 5px; display: none; align-items: center; gap: 4px;
+        }
+        .field-error.show { display: flex; }
+
+        /* Password strength */
+        .pw-strength { margin-top: 8px; }
+        .pw-bars { display: flex; gap: 4px; margin-bottom: 4px; }
+        .pw-bar {
+          flex: 1; height: 3px; border-radius: 2px;
+          background: rgba(255,255,255,0.08);
+          transition: background 0.3s;
+        }
+        .pw-bar.weak { background: var(--danger); }
+        .pw-bar.fair { background: var(--gold); }
+        .pw-bar.good { background: #88dd44; }
+        .pw-bar.strong { background: var(--success); }
+        .pw-label { font-size: 11px; color: var(--text-muted); }
+        .pw-label.weak { color: var(--danger); }
+        .pw-label.fair { color: var(--gold); }
+        .pw-label.good { color: #88dd44; }
+        .pw-label.strong { color: var(--success); }
+
+        /* Role select */
+        .role-select-wrap { position: relative; }
+        .role-select-icon {
+          position: absolute; left: 14px; top: 50%;
+          transform: translateY(-50%); font-size: 15px;
+          pointer-events: none; color: var(--muted); z-index: 1;
+        }
+        .role-select-wrap:focus-within .role-select-icon { color: var(--brand); }
+        .role-options { display: flex; gap: 10px; }
+        .role-option {
+          flex: 1; position: relative;
+        }
+        .role-option input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+        .role-option-label {
+          display: flex; flex-direction: column; align-items: center;
+          gap: 6px; padding: 16px 12px;
+          background: rgba(255,255,255,0.04);
+          border: 1.5px solid rgba(255,255,255,0.1);
+          border-radius: var(--radius); cursor: pointer;
+          transition: all 0.2s; text-align: center;
+        }
+        .role-option-label:hover {
+          background: rgba(255,255,255,0.07);
+          border-color: rgba(255,255,255,0.2);
+        }
+        .role-option input:checked + .role-option-label {
+          background: rgba(164,53,240,0.1);
+          border-color: var(--brand);
+        }
+        .role-option input:checked + .role-option-label.student-label {
+          background: rgba(0,201,167,0.08);
+          border-color: var(--teal);
+        }
+        .role-icon { font-size: 22px; }
+        .role-name { font-size: 13px; font-weight: 600; }
+        .role-desc-sm { font-size: 10px; color: var(--text-muted); line-height: 1.4; }
+
+        /* Terms checkbox */
+        .terms-wrap {
+          display: flex; align-items: flex-start; gap: 10px;
+          margin-bottom: 20px; cursor: pointer;
+        }
+        .terms-wrap input[type="checkbox"] { display: none; }
+        .custom-checkbox {
+          width: 18px; height: 18px; border-radius: 5px;
+          border: 1.5px solid rgba(255,255,255,0.2);
+          background: rgba(255,255,255,0.04);
+          display: flex; align-items: center; justify-content: center;
+          transition: all 0.2s; font-size: 10px; flex-shrink: 0;
+          margin-top: 2px;
+        }
+        .terms-wrap input:checked + .custom-checkbox {
+          background: var(--brand); border-color: var(--brand);
+        }
+        .terms-text {
+          font-size: 12px; color: var(--text-muted); line-height: 1.6;
+        }
+        .terms-text a { color: rgba(164,53,240,0.8); text-decoration: none; }
+        .terms-text a:hover { color: var(--brand); }
+
+        /* Alert */
+        .alert-box {
+          border-radius: var(--radius); padding: 12px 16px;
+          font-size: 13px; margin-bottom: 18px;
+          display: none; align-items: center; gap: 10px;
+          animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
+        .alert-box.show { display: flex; }
+        .alert-box.error { background: rgba(255,107,107,0.1); border: 1px solid rgba(255,107,107,0.3); color: #ff9999; }
+        .alert-box.success { background: rgba(0,201,167,0.1); border: 1px solid rgba(0,201,167,0.3); color: #4dffd9; }
+
+        /* Submit */
+        .btn-submit {
+          width: 100%; padding: 14px;
+          background: linear-gradient(135deg, var(--teal), var(--brand));
+          color: var(--white); border: none;
+          border-radius: var(--radius-pill);
+          font-size: 16px; font-weight: 600;
+          font-family: 'Outfit', sans-serif;
+          cursor: pointer;
+          box-shadow: 0 6px 30px rgba(0,201,167,0.3);
+          transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+          position: relative; overflow: hidden; letter-spacing: 0.3px;
+        }
+        .btn-submit::after {
+          content: ''; position: absolute; inset: 0;
+          background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+          opacity: 0; transition: opacity 0.2s;
+        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(0,201,167,0.45); }
+        .btn-submit:hover::after { opacity: 1; }
+        .btn-submit:active { transform: translateY(0); }
+        .btn-submit.loading { opacity: 0.7; pointer-events: none; }
+        .btn-text { display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .spinner {
+          width: 16px; height: 16px; border-radius: 50%;
+          border: 2px solid rgba(255,255,255,0.3); border-top-color: white;
+          animation: spin 0.7s linear infinite; display: none;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .login-link {
+          text-align: center; margin-top: 22px;
+          font-size: 14px; color: var(--text-muted);
+        }
+        .login-link a { color: var(--brand); text-decoration: none; font-weight: 600; transition: color 0.2s; }
+        .login-link a:hover { color: #d088ff; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 960px) {
+          .left-panel { display: none; }
+          .right-panel { width: 100%; border-left: none; background: var(--dark); }
+        }
+        @media (max-width: 480px) {
+          .right-panel { padding: 40px 20px; }
+          .role-options { flex-direction: column; }
+        }
+    </style>
 </head>
-<body class="bg-light">
-<div class="container mt-5">
-    <div class="card mx-auto shadow" style="max-width: 400px;">
-        <div class="card-body">
-            <h3 class="text-center">Register</h3>
-            <form id="regForm">
-                <div class="mb-3">
-                    <label>Email</label>
-                    <input type="email" id="email" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label>Password</label>
-                    <input type="password" id="password" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label>Role</label>
-                    <select id="role" class="form-select">
-                        <option value="STUDENT">Student</option>
-                        <option value="INSTRUCTOR">Instructor</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary w-100">Create Account</button>
-            </form>
+<body>
+
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- ═══ LEFT PANEL ═══ -->
+<div class="left-panel">
+    <div class="lp-bg"></div>
+    <div class="lp-grid"></div>
+    <div class="lp-orb lp-orb-1"></div>
+    <div class="lp-orb lp-orb-2"></div>
+
+    <div class="lp-content">
+        <a href="index.html" class="lp-brand">Learn<span>Sphere</span></a>
+
+        <div class="lp-eyebrow">Join 2.4 Million Learners</div>
+        <h1 class="lp-headline">
+            Start Your<br>
+            <em>Learning</em><br>
+            Adventure.
+        </h1>
+        <p class="lp-sub">
+            Create your free account today and get instant access to thousands of courses, expert mentors, and a global community of learners.
+        </p>
+
+        <!-- Role preview cards -->
+        <div class="role-preview">
+            <div class="role-prev-card student">
+                <div class="rpc-icon">🎓</div>
+                <div class="rpc-title">I'm a Student</div>
+                <div class="rpc-desc">Access courses, track progress, earn certificates, and grow your skills.</div>
+                <span class="rpc-badge badge-teal">Free Forever</span>
+            </div>
+            <div class="role-prev-card instructor">
+                <div class="rpc-icon">👨‍🏫</div>
+                <div class="rpc-title">I'm an Instructor</div>
+                <div class="rpc-desc">Create courses, reach millions, earn revenue, and build your teaching brand.</div>
+                <span class="rpc-badge badge-purple">Start Earning</span>
+            </div>
+        </div>
+
+        <div class="trust-row">
+            <div class="trust-avatars">
+                <div class="trust-avatar av1">R</div>
+                <div class="trust-avatar av2">K</div>
+                <div class="trust-avatar av3">M</div>
+                <div class="trust-avatar av4">A</div>
+            </div>
+            <div class="trust-info">
+                <strong>Join 2.4M+ learners worldwide</strong>
+                <span class="trust-stars">★★★★★</span> Rated 4.8 out of 5
+            </div>
         </div>
     </div>
 </div>
 
+<!-- ═══ RIGHT PANEL ═══ -->
+<div class="right-panel">
+    <div class="form-card">
+
+        <div class="form-top">
+            <a href="index.html" class="lp-brand" id="mobileBrand" style="display:none;margin-bottom:20px;">Learn<span>Sphere</span></a>
+            <div class="form-eyebrow">Get started free</div>
+            <h2 class="form-title">Create your account</h2>
+            <p class="form-subtitle">No credit card required. Cancel anytime.</p>
+        </div>
+
+        <!-- Progress -->
+        <div class="progress-wrap">
+            <div class="progress-label">
+                <span>Account Setup</span>
+                <span id="progressPct">0%</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <!-- Social signup -->
+        <div class="social-row">
+            <button class="social-btn" onclick="socialSignup('Google')">
+                <span>🔵</span> Google
+            </button>
+            <button class="social-btn" onclick="socialSignup('GitHub')">
+                <span>⚫</span> GitHub
+            </button>
+        </div>
+
+        <div class="divider">
+            <div class="divider-line"></div>
+            <span class="divider-text">or register with email</span>
+            <div class="divider-line"></div>
+        </div>
+
+        <!-- Alert -->
+        <div class="alert-box" id="alertBox">
+            <span id="alertIcon">⚠️</span>
+            <span id="alertMsg"></span>
+        </div>
+
+        <!-- Form -->
+        <form id="regForm" novalidate>
+
+            <!-- Email -->
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <div class="input-wrap">
+                    <span class="input-icon">✉️</span>
+                    <input type="email" id="email" class="form-input"
+                           placeholder="you@example.com" autocomplete="email"
+                           oninput="onEmailInput()">
+                    <span class="input-check" id="emailCheck"></span>
+                </div>
+                <div class="field-error" id="emailError">Please enter a valid email address.</div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <div class="input-wrap">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="password" class="form-input"
+                           placeholder="Create a strong password" autocomplete="new-password"
+                           oninput="onPasswordInput()">
+                    <button type="button" class="password-toggle password-toggle-solo" id="pwToggle1" onclick="togglePw('password','pwToggle1')">👁</button>
+                </div>
+                <div class="pw-strength">
+                    <div class="pw-bars">
+                        <div class="pw-bar" id="bar1"></div>
+                        <div class="pw-bar" id="bar2"></div>
+                        <div class="pw-bar" id="bar3"></div>
+                        <div class="pw-bar" id="bar4"></div>
+                    </div>
+                    <div class="pw-label" id="pwLabel">Enter a password to see strength</div>
+                </div>
+                <div class="field-error" id="passwordError">Password must be at least 8 characters.</div>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="form-group">
+                <label class="form-label">Confirm Password</label>
+                <div class="input-wrap">
+                    <span class="input-icon">🔑</span>
+                    <input type="password" id="confirmPassword" class="form-input"
+                           placeholder="Repeat your password" autocomplete="new-password"
+                           oninput="onConfirmInput()">
+                    <button type="button" class="password-toggle password-toggle-solo" id="pwToggle2" onclick="togglePw('confirmPassword','pwToggle2')">👁</button>
+                </div>
+                <div class="field-error" id="confirmError">Passwords do not match.</div>
+            </div>
+
+            <!-- Role -->
+            <div class="form-group">
+                <label class="form-label">I want to join as</label>
+                <div class="role-options">
+                    <div class="role-option">
+                        <input type="radio" id="roleStudent" name="role" value="STUDENT" checked onchange="updateProgress()">
+                        <label class="role-option-label student-label" for="roleStudent">
+                            <span class="role-icon">🎓</span>
+                            <span class="role-name">Student</span>
+                            <span class="role-desc-sm">Learn new skills at my own pace</span>
+                        </label>
+                    </div>
+                    <div class="role-option">
+                        <input type="radio" id="roleInstructor" name="role" value="INSTRUCTOR" onchange="updateProgress()">
+                        <label class="role-option-label" for="roleInstructor">
+                            <span class="role-icon">👨‍🏫</span>
+                            <span class="role-name">Instructor</span>
+                            <span class="role-desc-sm">Teach and share my expertise</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Terms -->
+            <div class="terms-wrap" onclick="toggleTerms()">
+                <input type="checkbox" id="termsCheck">
+                <span class="custom-checkbox" id="termsCb"></span>
+                <div class="terms-text">
+                    I agree to the <a href="#" onclick="event.stopPropagation()">Terms of Service</a> and
+                    <a href="#" onclick="event.stopPropagation()">Privacy Policy</a>. I understand I can cancel anytime.
+                </div>
+            </div>
+            <div class="field-error" id="termsError" style="margin-top:-10px;margin-bottom:14px;">You must accept the terms to continue.</div>
+
+            <!-- Submit -->
+            <button type="submit" class="btn-submit" id="submitBtn">
+                <div class="btn-text">
+                    <div class="spinner" id="spinner"></div>
+                    <span id="btnLabel">Create Free Account →</span>
+                </div>
+            </button>
+
+        </form>
+
+        <div class="login-link">
+            Already have an account? <a href="login.html">Sign in here</a>
+        </div>
+
+    </div>
+</div>
+
 <script>
-    document.getElementById('regForm').onsubmit = async (e) => {
-        e.preventDefault();
-        const data = {
-            email: document.getElementById('email').value,
-            password: document.getElementById('password').value,
-            role: document.getElementById('role').value
-        };
+    // ── CURSOR GLOW ──
+    document.addEventListener('mousemove', e => {
+      const g = document.getElementById('cursorGlow');
+      g.style.left = e.clientX + 'px';
+      g.style.top = e.clientY + 'px';
+    });
+
+    // ── MOBILE BRAND ──
+    if (window.innerWidth <= 960) document.getElementById('mobileBrand').style.display = 'inline-block';
+
+    // ── TERMS TOGGLE ──
+    let termsChecked = false;
+    function toggleTerms() {
+      termsChecked = !termsChecked;
+      document.getElementById('termsCheck').checked = termsChecked;
+      const cb = document.getElementById('termsCb');
+      cb.textContent = termsChecked ? '✓' : '';
+      cb.style.color = termsChecked ? '#fff' : 'transparent';
+      if (termsChecked) document.getElementById('termsError').classList.remove('show');
+      updateProgress();
+    }
+
+    // ── PASSWORD TOGGLE ──
+    const pwState = {};
+    function togglePw(inputId, btnId) {
+      pwState[inputId] = !pwState[inputId];
+      document.getElementById(inputId).type = pwState[inputId] ? 'text' : 'password';
+      document.getElementById(btnId).textContent = pwState[inputId] ? '🙈' : '👁';
+    }
+
+    // ── VALIDATION HELPERS ──
+    function validateEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
+    function showErr(id, msg) {
+      const el = document.getElementById(id + 'Error');
+      document.getElementById(id).classList.add('error');
+      document.getElementById(id).classList.remove('valid');
+      if (msg) el.textContent = msg;
+      el.classList.add('show');
+    }
+    function clearErr(id) {
+      document.getElementById(id).classList.remove('error');
+      document.getElementById(id + 'Error').classList.remove('show');
+    }
+    function setValid(id) {
+      document.getElementById(id).classList.remove('error');
+      document.getElementById(id).classList.add('valid');
+      document.getElementById(id + 'Error').classList.remove('show');
+    }
+
+    // ── PASSWORD STRENGTH ──
+    function getStrength(pw) {
+      let score = 0;
+      if (pw.length >= 8) score++;
+      if (pw.length >= 12) score++;
+      if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) score++;
+      if (/[0-9]/.test(pw)) score++;
+      if (/[^A-Za-z0-9]/.test(pw)) score++;
+      if (score <= 1) return { level: 1, label: 'Weak', cls: 'weak' };
+      if (score === 2) return { level: 2, label: 'Fair', cls: 'fair' };
+      if (score === 3) return { level: 3, label: 'Good', cls: 'good' };
+      return { level: 4, label: 'Strong', cls: 'strong' };
+    }
+
+    function updateStrengthUI(pw) {
+      const { level, label, cls } = getStrength(pw);
+      const bars = ['bar1','bar2','bar3','bar4'];
+      const lbl = document.getElementById('pwLabel');
+      bars.forEach((b, i) => {
+        const el = document.getElementById(b);
+        el.className = 'pw-bar';
+        if (i < level) el.classList.add(cls);
+      });
+      lbl.className = 'pw-label ' + (pw ? cls : '');
+      lbl.textContent = pw ? label + ' password' : 'Enter a password to see strength';
+    }
+
+    // ── INPUT HANDLERS ──
+    function onEmailInput() {
+      const v = document.getElementById('email').value;
+      const chk = document.getElementById('emailCheck');
+      clearErr('email'); hideAlert();
+      if (validateEmail(v)) {
+        setValid('email');
+        chk.textContent = '✅'; chk.classList.add('show');
+      } else {
+        chk.classList.remove('show');
+      }
+      updateProgress();
+    }
+
+    function onPasswordInput() {
+      const v = document.getElementById('password').value;
+      clearErr('password'); hideAlert();
+      updateStrengthUI(v);
+      if (v.length >= 8) setValid('password');
+      updateProgress();
+      if (document.getElementById('confirmPassword').value) onConfirmInput();
+    }
+
+    function onConfirmInput() {
+      const pw = document.getElementById('password').value;
+      const cpw = document.getElementById('confirmPassword').value;
+      clearErr('confirmPassword');
+      if (cpw && cpw === pw) {
+        setValid('confirmPassword');
+      } else if (cpw) {
+        showErr('confirmPassword', 'Passwords do not match.');
+      }
+      updateProgress();
+    }
+
+    // ── PROGRESS BAR ──
+    function updateProgress() {
+      let score = 0;
+      if (validateEmail(document.getElementById('email').value)) score += 25;
+      if (document.getElementById('password').value.length >= 8) score += 25;
+      const cpw = document.getElementById('confirmPassword').value;
+      if (cpw && cpw === document.getElementById('password').value) score += 25;
+      if (termsChecked) score += 25;
+      document.getElementById('progressFill').style.width = score + '%';
+      document.getElementById('progressPct').textContent = score + '%';
+    }
+
+    // ── ALERT ──
+    function showAlert(msg, type = 'error') {
+      const box = document.getElementById('alertBox');
+      box.className = `alert-box show ${type}`;
+      document.getElementById('alertIcon').textContent = type === 'error' ? '⚠️' : '✅';
+      document.getElementById('alertMsg').textContent = msg;
+    }
+    function hideAlert() { document.getElementById('alertBox').classList.remove('show'); }
+
+    // ── SOCIAL ──
+    function socialSignup(p) { showAlert(`${p} signup coming soon!`); }
+
+    // ── LOADING ──
+    function setLoading(on) {
+      const btn = document.getElementById('submitBtn');
+      btn.classList.toggle('loading', on);
+      document.getElementById('spinner').style.display = on ? 'block' : 'none';
+      document.getElementById('btnLabel').textContent = on ? 'Creating account...' : 'Create Free Account →';
+    }
+
+    // ── FORM SUBMIT ──
+    document.getElementById('regForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email    = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const confirm  = document.getElementById('confirmPassword').value;
+      const role     = document.querySelector('input[name="role"]:checked').value;
+      let valid = true;
+
+      hideAlert();
+
+      if (!validateEmail(email))            { showErr('email', 'Please enter a valid email address.'); valid = false; }
+      if (password.length < 8)              { showErr('password', 'Password must be at least 8 characters.'); valid = false; }
+      if (password !== confirm)             { showErr('confirmPassword', 'Passwords do not match.'); valid = false; }
+      if (!termsChecked) {
+        document.getElementById('termsError').classList.add('show'); valid = false;
+      }
+      if (!valid) return;
+
+      setLoading(true);
+
+      const data = { email, password, role };
+
+      try {
         const resp = await fetch('/api/auth/register', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data)
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
         });
-        alert(await resp.text());
-    };
+
+        const text = await resp.text();
+
+        if (resp.ok) {
+          showAlert('Account created successfully! Redirecting to login...', 'success');
+          document.getElementById('submitBtn').style.background = 'linear-gradient(135deg, #00c9a7, #00896e)';
+          setTimeout(() => { window.location.href = 'login.html'; }, 1600);
+        } else {
+          setLoading(false);
+          showAlert(text || 'Registration failed. This email may already be registered.');
+        }
+      } catch {
+        setLoading(false);
+        showAlert('Connection error. Please check your internet and try again.');
+      }
+    });
 </script>
 </body>
 </html>

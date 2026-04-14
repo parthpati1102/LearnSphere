@@ -33,5 +33,5 @@ build/
 
 # Environment files (IMPORTANT 🔥)
 .env
-application.properties
+#application.properties
 application.yml
